@@ -111,26 +111,26 @@ const Dashboard = ({ user }: DashboardProps) => {
   return (
     <div className="container mx-auto px-4 py-10">
       <div className="mb-10 fade-in">
-        <h1 className="text-5xl font-bold mb-2 gradient-text">Dashboard</h1>
-        <p className="text-lg text-muted-foreground">Manage your properties and profile</p>
+        <h1 className="text-5xl font-bold mb-2 gradient-text">Mi Panel</h1>
+        <p className="text-lg text-muted-foreground">Administra tus propiedades y perfil</p>
       </div>
 
       <Tabs defaultValue="listings" className="w-full">
         <TabsList className="grid w-full grid-cols-2 max-w-md h-12 bg-purple-50">
-          <TabsTrigger value="listings" className="text-base">My Listings</TabsTrigger>
-          <TabsTrigger value="profile" className="text-base">Profile</TabsTrigger>
+          <TabsTrigger value="listings" className="text-base">Mis Publicaciones</TabsTrigger>
+          <TabsTrigger value="profile" className="text-base">Perfil</TabsTrigger>
         </TabsList>
 
         <TabsContent value="listings" className="mt-8">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 p-6 bg-gradient-to-r from-purple-50 to-white rounded-xl border">
             <div>
-              <h2 className="text-3xl font-bold mb-1">Your Properties</h2>
+              <h2 className="text-3xl font-bold mb-1">Tus Propiedades</h2>
               <p className="text-base text-muted-foreground">
-                Manage your {myListings.length} {myListings.length === 1 ? 'listing' : 'listings'}
+                Administra tus {myListings.length} {myListings.length === 1 ? 'publicación' : 'publicaciones'}
               </p>
             </div>
             <Button variant="hero" size="lg" onClick={() => navigate("/create-listing")} className="shadow-medium">
-              Create New Listing
+              Nueva Publicación
             </Button>
           </div>
 
@@ -164,12 +164,12 @@ const Dashboard = ({ user }: DashboardProps) => {
                 <div className="w-20 h-20 mx-auto mb-6 bg-purple-100 rounded-full flex items-center justify-center">
                   <Edit className="h-10 w-10 text-primary" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">No listings yet</h3>
+                <h3 className="text-xl font-semibold mb-2">Aún no tienes publicaciones</h3>
                 <p className="text-muted-foreground mb-6">
-                  You haven't created any listings yet. Start by creating your first property.
+                  No has creado ninguna publicación todavía. Comienza creando tu primera propiedad.
                 </p>
                 <Button variant="hero" size="lg" onClick={() => navigate("/create-listing")} className="shadow-medium">
-                  Create Your First Listing
+                  Crear Mi Primera Publicación
                 </Button>
               </CardContent>
             </Card>
@@ -179,16 +179,16 @@ const Dashboard = ({ user }: DashboardProps) => {
         <TabsContent value="profile" className="mt-8">
           <Card className="max-w-2xl border-2 hover-lift">
             <CardHeader className="space-y-2">
-              <CardTitle className="text-3xl">Profile Settings</CardTitle>
+              <CardTitle className="text-3xl">Configuración del Perfil</CardTitle>
               <CardDescription className="text-base">
-                Update your profile information
+                Actualiza tu información personal
               </CardDescription>
             </CardHeader>
             <CardContent className="pt-6">
               {profile && (
                 <form onSubmit={handleUpdateProfile} className="space-y-6">
                   <div className="space-y-2">
-                    <Label htmlFor="full_name">Full Name</Label>
+                    <Label htmlFor="full_name">Nombre Completo</Label>
                     <Input
                       id="full_name"
                       name="full_name"
@@ -198,21 +198,21 @@ const Dashboard = ({ user }: DashboardProps) => {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="role">I am a...</Label>
+                    <Label htmlFor="role">Soy un...</Label>
                     <Select name="role" defaultValue={profile.role}>
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="tenant">Tenant</SelectItem>
-                        <SelectItem value="host">Host</SelectItem>
-                        <SelectItem value="both">Both</SelectItem>
+                        <SelectItem value="tenant">Inquilino</SelectItem>
+                        <SelectItem value="host">Propietario</SelectItem>
+                        <SelectItem value="both">Ambos</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="phone">Phone</Label>
+                    <Label htmlFor="phone">Teléfono</Label>
                     <Input
                       id="phone"
                       name="phone"
@@ -228,12 +228,12 @@ const Dashboard = ({ user }: DashboardProps) => {
                       name="bio"
                       rows={4}
                       defaultValue={profile.bio || ""}
-                      placeholder="Tell us about yourself..."
+                      placeholder="Cuéntanos sobre ti..."
                     />
                   </div>
 
                   <Button type="submit" variant="hero" size="lg" disabled={loading} className="shadow-medium">
-                    {loading ? "Saving..." : "Save Changes"}
+                    {loading ? "Guardando..." : "Guardar Cambios"}
                   </Button>
                 </form>
               )}

@@ -83,22 +83,22 @@ const Auth = () => {
       <Card className="w-full max-w-md shadow-large hover-lift relative z-10 border-2 fade-in">
         <CardHeader className="text-center space-y-4 pb-6">
           <img src={logo} alt="D House" className="h-20 mx-auto transition-transform hover:scale-110 duration-300" />
-          <CardTitle className="text-4xl gradient-text">Welcome to D House</CardTitle>
+          <CardTitle className="text-4xl gradient-text">Bienvenido a D House</CardTitle>
           <CardDescription className="text-base">
-            Find your next home for a month or more
+            Encuentra tu próximo hogar para un mes o más
           </CardDescription>
         </CardHeader>
         <CardContent className="px-6">
           <Tabs defaultValue="signin" className="w-full">
             <TabsList className="grid w-full grid-cols-2 h-12 bg-purple-50">
-              <TabsTrigger value="signin" className="text-base">Sign In</TabsTrigger>
-              <TabsTrigger value="signup" className="text-base">Sign Up</TabsTrigger>
+              <TabsTrigger value="signin" className="text-base">Iniciar Sesión</TabsTrigger>
+              <TabsTrigger value="signup" className="text-base">Registrarse</TabsTrigger>
             </TabsList>
             
             <TabsContent value="signin">
               <form onSubmit={handleSignIn} className="space-y-5">
                 <div className="space-y-2">
-                  <Label htmlFor="signin-email">Email</Label>
+                  <Label htmlFor="signin-email">Correo Electrónico</Label>
                   <Input
                     id="signin-email"
                     type="email"
@@ -109,7 +109,7 @@ const Auth = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="signin-password">Password</Label>
+                  <Label htmlFor="signin-password">Contraseña</Label>
                   <Input
                     id="signin-password"
                     type="password"
@@ -120,7 +120,7 @@ const Auth = () => {
                   />
                 </div>
                 <Button type="submit" className="w-full h-12 text-base font-semibold" disabled={loading} variant="hero">
-                  {loading ? "Signing in..." : "Sign In"}
+                  {loading ? "Iniciando sesión..." : "Iniciar Sesión"}
                 </Button>
               </form>
             </TabsContent>
@@ -128,18 +128,18 @@ const Auth = () => {
             <TabsContent value="signup">
               <form onSubmit={handleSignUp} className="space-y-5">
                 <div className="space-y-2">
-                  <Label htmlFor="signup-name">Full Name</Label>
+                  <Label htmlFor="signup-name">Nombre Completo</Label>
                   <Input
                     id="signup-name"
                     type="text"
-                    placeholder="John Doe"
+                    placeholder="Juan Pérez"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     required
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="signup-email">Email</Label>
+                  <Label htmlFor="signup-email">Correo Electrónico</Label>
                   <Input
                     id="signup-email"
                     type="email"
@@ -150,7 +150,7 @@ const Auth = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="signup-password">Password</Label>
+                  <Label htmlFor="signup-password">Contraseña</Label>
                   <Input
                     id="signup-password"
                     type="password"
@@ -162,7 +162,7 @@ const Auth = () => {
                   />
                 </div>
                 <Button type="submit" className="w-full h-12 text-base font-semibold" disabled={loading} variant="hero">
-                  {loading ? "Creating account..." : "Create Account"}
+                  {loading ? "Creando cuenta..." : "Crear Cuenta"}
                 </Button>
               </form>
             </TabsContent>
