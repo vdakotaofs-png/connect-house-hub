@@ -114,18 +114,18 @@ const Messages = ({ user }: MessagesProps) => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-8">Messages</h1>
+      <h1 className="text-4xl font-bold mb-8">Mensajes</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Conversations List */}
         <Card className="lg:col-span-1">
           <CardHeader>
-            <CardTitle>Conversations</CardTitle>
+            <CardTitle>Conversaciones</CardTitle>
           </CardHeader>
           <CardContent className="p-0">
             <ScrollArea className="h-[600px]">
               {loading ? (
-                <p className="text-center p-4 text-muted-foreground">Loading...</p>
+                <p className="text-center p-4 text-muted-foreground">Cargando...</p>
               ) : conversations.length > 0 ? (
                 conversations.map((conv) => (
                   <button
@@ -164,7 +164,7 @@ const Messages = ({ user }: MessagesProps) => {
                 ))
               ) : (
                 <p className="text-center p-4 text-muted-foreground">
-                  No messages yet
+                  No hay mensajes aún
                 </p>
               )}
             </ScrollArea>
@@ -182,7 +182,7 @@ const Messages = ({ user }: MessagesProps) => {
                 </p>
               </div>
             ) : (
-              <CardTitle>Select a conversation</CardTitle>
+              <CardTitle>Selecciona una conversación</CardTitle>
             )}
           </CardHeader>
           <CardContent>
@@ -225,7 +225,7 @@ const Messages = ({ user }: MessagesProps) => {
                 <div className="flex gap-2">
                   <Textarea
                     rows={2}
-                    placeholder="Type your message..."
+                    placeholder="Escribe tu mensaje..."
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
                     onKeyDown={(e) => {
@@ -236,13 +236,13 @@ const Messages = ({ user }: MessagesProps) => {
                     }}
                   />
                   <Button variant="hero" onClick={sendMessage}>
-                    Send
+                    Enviar
                   </Button>
                 </div>
               </div>
             ) : (
               <div className="h-[500px] flex items-center justify-center text-muted-foreground">
-                Select a conversation to view messages
+                Selecciona una conversación para ver los mensajes
               </div>
             )}
           </CardContent>

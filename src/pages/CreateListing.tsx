@@ -76,44 +76,44 @@ const CreateListing = ({ user }: CreateListingProps) => {
     <div className="container mx-auto px-4 py-10 bg-gradient-to-b from-purple-50/30 to-white min-h-screen">
       <Card className="max-w-3xl mx-auto border-2 hover-lift fade-in">
         <CardHeader className="space-y-3">
-          <CardTitle className="text-4xl gradient-text">Create New Listing</CardTitle>
+          <CardTitle className="text-4xl gradient-text">Publica Tu Propiedad</CardTitle>
           <CardDescription className="text-base">
-            List your property for monthly rent or sale
+            Comparte los detalles de tu propiedad para comenzar
           </CardDescription>
         </CardHeader>
         <CardContent className="pt-6">
           <form onSubmit={handleSubmit} className="space-y-7">
             <div className="space-y-2">
-              <Label htmlFor="title">Property Title *</Label>
+              <Label htmlFor="title">Título de la Propiedad *</Label>
               <Input
                 id="title"
                 name="title"
-                placeholder="Beautiful 2-bedroom apartment in downtown"
+                placeholder="Hermoso apartamento de 2 habitaciones en el centro"
                 required
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="description">Description *</Label>
+              <Label htmlFor="description">Descripción *</Label>
               <Textarea
                 id="description"
                 name="description"
                 rows={5}
-                placeholder="Describe your property, amenities, neighborhood..."
+                placeholder="Describe tu propiedad, amenidades, vecindario..."
                 required
               />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="type">Listing Type *</Label>
-                <Select name="type" required>
+                <Label htmlFor="type">Tipo de Publicación *</Label>
+                <Select name="type" defaultValue="rent">
                   <SelectTrigger>
-                    <SelectValue placeholder="Select type" />
+                    <SelectValue placeholder="Selecciona el tipo" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="rent">For Rent</SelectItem>
-                    <SelectItem value="sale">For Sale</SelectItem>
+                    <SelectItem value="rent">En Alquiler</SelectItem>
+                    <SelectItem value="sale">En Venta</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -132,7 +132,7 @@ const CreateListing = ({ user }: CreateListingProps) => {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="bedrooms">Bedrooms</Label>
+                <Label htmlFor="bedrooms">Habitaciones</Label>
                 <Input
                   id="bedrooms"
                   name="bedrooms"
@@ -143,7 +143,7 @@ const CreateListing = ({ user }: CreateListingProps) => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="bathrooms">Bathrooms</Label>
+                <Label htmlFor="bathrooms">Baños</Label>
                 <Input
                   id="bathrooms"
                   name="bathrooms"
@@ -154,7 +154,7 @@ const CreateListing = ({ user }: CreateListingProps) => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="area_m2">Area (m²)</Label>
+                <Label htmlFor="area_m2">Área (m²)</Label>
                 <Input
                   id="area_m2"
                   name="area_m2"
@@ -165,33 +165,33 @@ const CreateListing = ({ user }: CreateListingProps) => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="city">City *</Label>
+              <Label htmlFor="city">Ciudad *</Label>
               <Input
                 id="city"
                 name="city"
-                placeholder="New York"
+                placeholder="Santo Domingo"
                 required
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="address">Full Address</Label>
+              <Label htmlFor="address">Dirección Completa</Label>
               <Input
                 id="address"
                 name="address"
-                placeholder="123 Main St, Apt 4B"
+                placeholder="Calle Principal 123, Apto 4B"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="status">Publish Status *</Label>
+              <Label htmlFor="status">Estado de Publicación *</Label>
               <Select name="status" defaultValue="draft">
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="draft">Save as Draft</SelectItem>
-                  <SelectItem value="published">Publish Now</SelectItem>
+                  <SelectItem value="draft">Guardar como Borrador</SelectItem>
+                  <SelectItem value="published">Publicar Ahora</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -204,10 +204,10 @@ const CreateListing = ({ user }: CreateListingProps) => {
                 onClick={() => navigate("/dashboard")}
                 className="flex-1"
               >
-                Cancel
+                Cancelar
               </Button>
-              <Button type="submit" variant="hero" size="lg" disabled={loading} className="flex-1 shadow-medium">
-                {loading ? "Creating..." : "Create Listing"}
+              <Button type="submit" variant="hero" size="lg" disabled={loading} className="shadow-medium">
+                {loading ? "Creando..." : "Crear Publicación"}
               </Button>
             </div>
           </form>
