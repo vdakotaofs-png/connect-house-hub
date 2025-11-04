@@ -73,16 +73,16 @@ const CreateListing = ({ user }: CreateListingProps) => {
   if (!user) return null;
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <Card className="max-w-3xl mx-auto">
-        <CardHeader>
-          <CardTitle className="text-3xl">Create New Listing</CardTitle>
-          <CardDescription>
+    <div className="container mx-auto px-4 py-10 bg-gradient-to-b from-purple-50/30 to-white min-h-screen">
+      <Card className="max-w-3xl mx-auto border-2 hover-lift fade-in">
+        <CardHeader className="space-y-3">
+          <CardTitle className="text-4xl gradient-text">Create New Listing</CardTitle>
+          <CardDescription className="text-base">
             List your property for monthly rent or sale
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
+        <CardContent className="pt-6">
+          <form onSubmit={handleSubmit} className="space-y-7">
             <div className="space-y-2">
               <Label htmlFor="title">Property Title *</Label>
               <Input
@@ -196,15 +196,17 @@ const CreateListing = ({ user }: CreateListingProps) => {
               </Select>
             </div>
 
-            <div className="flex gap-4">
+            <div className="flex gap-4 pt-4">
               <Button
                 type="button"
                 variant="outline"
+                size="lg"
                 onClick={() => navigate("/dashboard")}
+                className="flex-1"
               >
                 Cancel
               </Button>
-              <Button type="submit" variant="hero" disabled={loading}>
+              <Button type="submit" variant="hero" size="lg" disabled={loading} className="flex-1 shadow-medium">
                 {loading ? "Creating..." : "Create Listing"}
               </Button>
             </div>

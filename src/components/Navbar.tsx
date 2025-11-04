@@ -23,12 +23,12 @@ const Navbar = ({ user }: NavbarProps) => {
   };
 
   return (
-    <nav className="sticky top-0 z-50 bg-white border-b shadow-sm">
-      <div className="container mx-auto px-4 py-3">
+    <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-purple-100 shadow-soft">
+      <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2">
-            <img src={logo} alt="D House" className="h-10" />
-            <span className="text-2xl font-bold text-primary">D House</span>
+          <Link to="/" className="flex items-center gap-2 transition-smooth hover:opacity-80">
+            <img src={logo} alt="D House" className="h-10 transition-transform hover:scale-110 duration-300" />
+            <span className="text-2xl font-bold gradient-text">D House</span>
           </Link>
 
           <div className="flex items-center gap-4">

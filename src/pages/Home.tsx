@@ -60,38 +60,39 @@ const Home = ({ user }: HomeProps) => {
   });
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-gradient-to-b from-purple-50/30 to-white">
       {/* Hero Section */}
-      <section className="relative h-[500px] flex items-center justify-center">
+      <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
           <img
             src={heroImage}
             alt="Modern Home"
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover scale-105"
           />
-          <div className="absolute inset-0 gradient-hero"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-900/90 via-purple-800/85 to-indigo-900/90"></div>
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-purple-400/20 via-transparent to-transparent"></div>
         </div>
-        <div className="relative z-10 text-center text-white max-w-4xl px-4">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6">
-            Find Your Next Home
+        <div className="relative z-10 text-center text-white max-w-5xl px-4 fade-in">
+          <h1 className="text-6xl md:text-7xl font-bold mb-6 leading-tight">
+            Find Your Next <span className="text-purple-300">Dream</span> Home
           </h1>
-          <p className="text-xl md:text-2xl mb-8">
+          <p className="text-xl md:text-2xl mb-10 text-purple-100 font-light">
             Monthly rentals and sales. Connect directly — no fees, no middlemen.
           </p>
           
           {/* Search Bar */}
-          <div className="bg-white rounded-xl p-4 shadow-large max-w-3xl mx-auto">
+          <div className="bg-white/95 backdrop-blur-md rounded-2xl p-5 shadow-large max-w-4xl mx-auto border border-white/20 hover-lift">
             <div className="flex flex-col md:flex-row gap-4">
               <div className="flex-1">
                 <Input
                   placeholder="Search by city or property..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="h-12"
+                  className="h-14 text-base border-2 focus:border-primary"
                 />
               </div>
               <Select value={typeFilter} onValueChange={setTypeFilter}>
-                <SelectTrigger className="w-full md:w-40 h-12">
+                <SelectTrigger className="w-full md:w-48 h-14 border-2">
                   <SelectValue placeholder="Type" />
                 </SelectTrigger>
                 <SelectContent>
@@ -100,7 +101,7 @@ const Home = ({ user }: HomeProps) => {
                   <SelectItem value="sale">For Sale</SelectItem>
                 </SelectContent>
               </Select>
-              <Button variant="hero" className="h-12 px-8">
+              <Button variant="hero" className="h-14 px-10 text-base font-semibold shadow-medium hover:shadow-large">
                 <Search className="mr-2 h-5 w-5" />
                 Search
               </Button>
@@ -110,20 +111,21 @@ const Home = ({ user }: HomeProps) => {
       </section>
 
       {/* Listings Grid */}
-      <section className="container mx-auto px-4 py-12">
-        <div className="mb-8">
-          <h2 className="text-3xl font-bold mb-2">Available Properties</h2>
-          <p className="text-muted-foreground">
-            Browse {filteredListings.length} properties available for monthly rent or sale
+      <section className="container mx-auto px-4 py-16">
+        <div className="mb-10 text-center">
+          <h2 className="text-4xl md:text-5xl font-bold mb-3 gradient-text">Available Properties</h2>
+          <p className="text-lg text-muted-foreground">
+            Browse {filteredListings.length} beautiful properties available for monthly rent or sale
           </p>
         </div>
 
         {loading ? (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground">Loading properties...</p>
+          <div className="text-center py-16">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent mb-4"></div>
+            <p className="text-lg text-muted-foreground">Loading properties...</p>
           </div>
         ) : filteredListings.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredListings.map((listing) => (
               <ListingCard
                 key={listing.id}

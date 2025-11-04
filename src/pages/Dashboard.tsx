@@ -109,30 +109,33 @@ const Dashboard = ({ user }: DashboardProps) => {
   if (!user) return null;
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-8">Dashboard</h1>
+    <div className="container mx-auto px-4 py-10">
+      <div className="mb-10 fade-in">
+        <h1 className="text-5xl font-bold mb-2 gradient-text">Dashboard</h1>
+        <p className="text-lg text-muted-foreground">Manage your properties and profile</p>
+      </div>
 
       <Tabs defaultValue="listings" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 max-w-md">
-          <TabsTrigger value="listings">My Listings</TabsTrigger>
-          <TabsTrigger value="profile">Profile</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-2 max-w-md h-12 bg-purple-50">
+          <TabsTrigger value="listings" className="text-base">My Listings</TabsTrigger>
+          <TabsTrigger value="profile" className="text-base">Profile</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="listings" className="mt-6">
-          <div className="flex justify-between items-center mb-6">
+        <TabsContent value="listings" className="mt-8">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 p-6 bg-gradient-to-r from-purple-50 to-white rounded-xl border">
             <div>
-              <h2 className="text-2xl font-semibold">Your Properties</h2>
-              <p className="text-muted-foreground">
-                Manage your {myListings.length} listings
+              <h2 className="text-3xl font-bold mb-1">Your Properties</h2>
+              <p className="text-base text-muted-foreground">
+                Manage your {myListings.length} {myListings.length === 1 ? 'listing' : 'listings'}
               </p>
             </div>
-            <Button variant="hero" onClick={() => navigate("/create-listing")}>
+            <Button variant="hero" size="lg" onClick={() => navigate("/create-listing")} className="shadow-medium">
               Create New Listing
             </Button>
           </div>
 
           {myListings.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {myListings.map((listing) => (
                 <div key={listing.id} className="relative">
                   <ListingCard listing={listing} userId={user.id} />
@@ -156,12 +159,16 @@ const Dashboard = ({ user }: DashboardProps) => {
               ))}
             </div>
           ) : (
-            <Card>
-              <CardContent className="text-center py-12">
-                <p className="text-muted-foreground mb-4">
-                  You haven't created any listings yet.
+            <Card className="border-2 border-dashed">
+              <CardContent className="text-center py-16">
+                <div className="w-20 h-20 mx-auto mb-6 bg-purple-100 rounded-full flex items-center justify-center">
+                  <Edit className="h-10 w-10 text-primary" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">No listings yet</h3>
+                <p className="text-muted-foreground mb-6">
+                  You haven't created any listings yet. Start by creating your first property.
                 </p>
-                <Button variant="hero" onClick={() => navigate("/create-listing")}>
+                <Button variant="hero" size="lg" onClick={() => navigate("/create-listing")} className="shadow-medium">
                   Create Your First Listing
                 </Button>
               </CardContent>
@@ -169,17 +176,17 @@ const Dashboard = ({ user }: DashboardProps) => {
           )}
         </TabsContent>
 
-        <TabsContent value="profile" className="mt-6">
-          <Card className="max-w-2xl">
-            <CardHeader>
-              <CardTitle>Profile Settings</CardTitle>
-              <CardDescription>
+        <TabsContent value="profile" className="mt-8">
+          <Card className="max-w-2xl border-2 hover-lift">
+            <CardHeader className="space-y-2">
+              <CardTitle className="text-3xl">Profile Settings</CardTitle>
+              <CardDescription className="text-base">
                 Update your profile information
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="pt-6">
               {profile && (
-                <form onSubmit={handleUpdateProfile} className="space-y-4">
+                <form onSubmit={handleUpdateProfile} className="space-y-6">
                   <div className="space-y-2">
                     <Label htmlFor="full_name">Full Name</Label>
                     <Input
@@ -225,7 +232,7 @@ const Dashboard = ({ user }: DashboardProps) => {
                     />
                   </div>
 
-                  <Button type="submit" variant="hero" disabled={loading}>
+                  <Button type="submit" variant="hero" size="lg" disabled={loading} className="shadow-medium">
                     {loading ? "Saving..." : "Save Changes"}
                   </Button>
                 </form>

@@ -167,82 +167,84 @@ const ListingDetail = ({ user }: ListingDetailProps) => {
   const mainPhoto = listing.photos?.[0] || "https://images.unsplash.com/photo-1564013799919-ab600027ffc6";
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-b from-purple-50/30 to-white">
       {/* Photo Gallery */}
-      <div className="relative h-[500px] overflow-hidden">
-        <img src={mainPhoto} alt={listing.title} className="w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-        <div className="absolute bottom-8 left-8 right-8 text-white">
-          <Badge className="mb-4 bg-white/90 text-primary">
+      <div className="relative h-[600px] overflow-hidden">
+        <img src={mainPhoto} alt={listing.title} className="w-full h-full object-cover scale-105" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
+        <div className="absolute bottom-10 left-8 right-8 text-white fade-in">
+          <Badge className="mb-6 bg-white/95 text-primary backdrop-blur-sm shadow-medium font-semibold text-base px-4 py-2">
             {listing.type === "rent" ? "For Rent" : "For Sale"}
           </Badge>
-          <h1 className="text-4xl md:text-5xl font-bold mb-2">{listing.title}</h1>
-          <p className="text-xl flex items-center gap-2">
-            <MapPin className="h-5 w-5" />
+          <h1 className="text-5xl md:text-6xl font-bold mb-4 leading-tight">{listing.title}</h1>
+          <p className="text-xl md:text-2xl flex items-center gap-2 text-purple-100">
+            <MapPin className="h-6 w-6" />
             {listing.city}
           </p>
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="container mx-auto px-4 py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
           {/* Main Content */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 space-y-8">
             {/* Property Details */}
-            <Card>
-              <CardHeader>
+            <Card className="border-2 hover-lift">
+              <CardHeader className="pb-6">
                 <div className="flex justify-between items-start">
                   <div>
-                    <CardTitle className="text-3xl text-primary">
-                      ${listing.price_month.toLocaleString()}/month
+                    <CardTitle className="text-4xl md:text-5xl gradient-text mb-4">
+                      ${listing.price_month.toLocaleString()}<span className="text-2xl text-muted-foreground">/month</span>
                     </CardTitle>
-                    <div className="flex gap-6 mt-4 text-muted-foreground">
+                    <div className="flex flex-wrap gap-6 text-base text-muted-foreground">
                       {listing.bedrooms && (
-                        <span className="flex items-center gap-2">
-                          <BedDouble className="h-5 w-5" />
-                          {listing.bedrooms} bed
+                        <span className="flex items-center gap-2.5">
+                          <BedDouble className="h-5 w-5 text-primary" />
+                          <span className="font-medium">{listing.bedrooms} bed</span>
                         </span>
                       )}
                       {listing.bathrooms && (
-                        <span className="flex items-center gap-2">
-                          <Bath className="h-5 w-5" />
-                          {listing.bathrooms} bath
+                        <span className="flex items-center gap-2.5">
+                          <Bath className="h-5 w-5 text-primary" />
+                          <span className="font-medium">{listing.bathrooms} bath</span>
                         </span>
                       )}
                       {listing.area_m2 && (
-                        <span className="flex items-center gap-2">
-                          <Maximize className="h-5 w-5" />
-                          {listing.area_m2}m²
+                        <span className="flex items-center gap-2.5">
+                          <Maximize className="h-5 w-5 text-primary" />
+                          <span className="font-medium">{listing.area_m2}m²</span>
                         </span>
                       )}
                     </div>
                   </div>
-                  <Button variant="ghost" size="icon" onClick={toggleFavorite}>
-                    <Heart className={isFavorite ? "fill-red-500 text-red-500" : ""} />
+                  <Button variant="ghost" size="icon" onClick={toggleFavorite} className="hover:bg-purple-50">
+                    <Heart className={isFavorite ? "fill-red-500 text-red-500 scale-110" : "text-gray-600"} />
                   </Button>
                 </div>
               </CardHeader>
-              <CardContent>
-                <h3 className="font-semibold mb-2">Description</h3>
-                <p className="text-muted-foreground whitespace-pre-wrap">{listing.description}</p>
+              <CardContent className="space-y-6">
+                <div>
+                  <h3 className="font-bold text-xl mb-3">Description</h3>
+                  <p className="text-muted-foreground text-base leading-relaxed whitespace-pre-wrap">{listing.description}</p>
+                </div>
                 
                 {listing.address && (
-                  <div className="mt-4">
-                    <h3 className="font-semibold mb-2">Address</h3>
-                    <p className="text-muted-foreground">{listing.address}</p>
+                  <div className="pt-4 border-t">
+                    <h3 className="font-bold text-xl mb-3">Address</h3>
+                    <p className="text-muted-foreground text-base">{listing.address}</p>
                   </div>
                 )}
               </CardContent>
             </Card>
 
             {/* Reviews */}
-            <Card>
+            <Card className="border-2 hover-lift">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                  Reviews ({ratings.length})
+                <CardTitle className="flex items-center gap-3 text-2xl">
+                  <Star className="h-6 w-6 fill-yellow-400 text-yellow-400" />
+                  <span>Reviews ({ratings.length})</span>
                   {avgRating > 0 && (
-                    <span className="text-muted-foreground text-base">
+                    <span className="text-muted-foreground text-lg font-normal">
                       - {avgRating.toFixed(1)} average
                     </span>
                   )}
@@ -250,9 +252,9 @@ const ListingDetail = ({ user }: ListingDetailProps) => {
               </CardHeader>
               <CardContent>
                 {ratings.length > 0 ? (
-                  <div className="space-y-4">
+                  <div className="space-y-6">
                     {ratings.map((rating) => (
-                      <div key={rating.id} className="border-b pb-4 last:border-0">
+                      <div key={rating.id} className="border-b pb-6 last:border-0 last:pb-0">
                         <div className="flex items-center gap-2 mb-2">
                           <Avatar>
                             <AvatarFallback>
@@ -289,27 +291,27 @@ const ListingDetail = ({ user }: ListingDetailProps) => {
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-6">
+          <div className="space-y-8">
             {/* Host Card */}
             {owner && (
-              <Card>
+              <Card className="border-2 hover-lift">
                 <CardHeader>
-                  <CardTitle>Hosted by</CardTitle>
+                  <CardTitle className="text-2xl">Hosted by</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-5">
                   <div className="flex items-center gap-4">
-                    <Avatar className="h-16 w-16">
-                      <AvatarFallback className="text-xl">
+                    <Avatar className="h-20 w-20 border-2 border-purple-100">
+                      <AvatarFallback className="text-2xl bg-gradient-to-br from-purple-400 to-indigo-500 text-white">
                         {owner.full_name?.[0] || "H"}
                       </AvatarFallback>
                     </Avatar>
                     <div>
-                      <p className="font-semibold text-lg">{owner.full_name}</p>
-                      <p className="text-sm text-muted-foreground capitalize">{owner.role}</p>
+                      <p className="font-bold text-xl">{owner.full_name}</p>
+                      <p className="text-base text-muted-foreground capitalize">{owner.role}</p>
                     </div>
                   </div>
                   {owner.bio && (
-                    <p className="text-sm text-muted-foreground">{owner.bio}</p>
+                    <p className="text-base text-muted-foreground leading-relaxed">{owner.bio}</p>
                   )}
                   <Link to={`/profile/${owner.id}`}>
                     <Button variant="outline" className="w-full">
@@ -322,11 +324,11 @@ const ListingDetail = ({ user }: ListingDetailProps) => {
 
             {/* Contact Host */}
             {user?.id !== listing.owner_id && (
-              <Card>
+              <Card className="border-2 hover-lift bg-gradient-to-br from-purple-50/50 to-white">
                 <CardHeader>
-                  <CardTitle>Contact Host</CardTitle>
+                  <CardTitle className="text-2xl">Contact Host</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-5">
                   <div className="space-y-2">
                     <Label>Your Message</Label>
                     <Textarea
@@ -336,11 +338,11 @@ const ListingDetail = ({ user }: ListingDetailProps) => {
                       onChange={(e) => setMessage(e.target.value)}
                     />
                   </div>
-                  <Button variant="hero" className="w-full" onClick={handleSendMessage}>
-                    <MessageCircle className="mr-2 h-4 w-4" />
+                  <Button variant="hero" size="lg" className="w-full shadow-medium" onClick={handleSendMessage}>
+                    <MessageCircle className="mr-2 h-5 w-5" />
                     Send Message
                   </Button>
-                  <p className="text-xs text-muted-foreground text-center">
+                  <p className="text-sm text-muted-foreground text-center leading-relaxed">
                     D House only connects tenants and hosts. No payment or booking involved.
                   </p>
                 </CardContent>

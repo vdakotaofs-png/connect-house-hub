@@ -69,57 +69,58 @@ const ListingCard = ({ listing, isFavorite, userId }: ListingCardProps) => {
 
   return (
     <Link to={`/listing/${listing.slug}`}>
-      <Card className="overflow-hidden hover:shadow-large transition-smooth cursor-pointer group">
-        <div className="relative h-64 overflow-hidden">
+      <Card className="overflow-hidden hover-lift cursor-pointer group border-2 hover:border-primary/20 transition-smooth fade-in">
+        <div className="relative h-64 overflow-hidden bg-gradient-to-br from-purple-50 to-white">
           <img
             src={mainPhoto}
             alt={listing.title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-smooth"
+            className="w-full h-full object-cover group-hover:scale-110 transition-all duration-500"
           />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-smooth"></div>
           <Button
             variant="ghost"
             size="icon"
-            className="absolute top-2 right-2 bg-white/90 hover:bg-white"
+            className="absolute top-3 right-3 bg-white/95 hover:bg-white shadow-medium backdrop-blur-sm"
             onClick={toggleFavorite}
           >
-            <Heart className={favorite ? "fill-red-500 text-red-500" : ""} />
+            <Heart className={favorite ? "fill-red-500 text-red-500 scale-110" : "text-gray-600"} />
           </Button>
           <Badge
-            className="absolute top-2 left-2 bg-white/90 text-primary hover:bg-white"
+            className="absolute top-3 left-3 bg-white/95 text-primary hover:bg-white shadow-medium backdrop-blur-sm font-semibold"
           >
             {listing.type === "rent" ? "For Rent" : "For Sale"}
           </Badge>
         </div>
-        <CardContent className="p-4">
-          <h3 className="font-semibold text-lg mb-2 line-clamp-1">{listing.title}</h3>
-          <p className="text-muted-foreground flex items-center gap-1 mb-3">
-            <MapPin className="h-4 w-4" />
-            {listing.city}
+        <CardContent className="p-5">
+          <h3 className="font-bold text-xl mb-2 line-clamp-1 group-hover:text-primary transition-smooth">{listing.title}</h3>
+          <p className="text-muted-foreground flex items-center gap-1.5 mb-4">
+            <MapPin className="h-4 w-4 text-primary" />
+            <span className="font-medium">{listing.city}</span>
           </p>
-          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+          <div className="flex items-center gap-5 text-sm text-muted-foreground">
             {listing.bedrooms && (
-              <span className="flex items-center gap-1">
-                <BedDouble className="h-4 w-4" />
-                {listing.bedrooms} bed
+              <span className="flex items-center gap-1.5">
+                <BedDouble className="h-4 w-4 text-primary" />
+                <span className="font-medium">{listing.bedrooms} bed</span>
               </span>
             )}
             {listing.bathrooms && (
-              <span className="flex items-center gap-1">
-                <Bath className="h-4 w-4" />
-                {listing.bathrooms} bath
+              <span className="flex items-center gap-1.5">
+                <Bath className="h-4 w-4 text-primary" />
+                <span className="font-medium">{listing.bathrooms} bath</span>
               </span>
             )}
             {listing.area_m2 && (
-              <span className="flex items-center gap-1">
-                <Maximize className="h-4 w-4" />
-                {listing.area_m2}m²
+              <span className="flex items-center gap-1.5">
+                <Maximize className="h-4 w-4 text-primary" />
+                <span className="font-medium">{listing.area_m2}m²</span>
               </span>
             )}
           </div>
         </CardContent>
-        <CardFooter className="p-4 pt-0">
-          <p className="text-2xl font-bold text-primary">
-            {listing.currency} {listing.price_month.toLocaleString()}/mo
+        <CardFooter className="p-5 pt-0 border-t mt-2">
+          <p className="text-2xl font-bold gradient-text">
+            {listing.currency} {listing.price_month.toLocaleString()}<span className="text-base font-normal text-muted-foreground">/mo</span>
           </p>
         </CardFooter>
       </Card>
