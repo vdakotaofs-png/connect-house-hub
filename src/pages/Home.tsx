@@ -63,50 +63,91 @@ const Home = ({ user }: HomeProps) => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-50/30 to-white">
       {/* Hero Section */}
-      <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-[700px] lg:min-h-[800px] flex items-center justify-center overflow-hidden">
+        {/* Background with parallax effect */}
         <div className="absolute inset-0">
           <img
             src={heroImage}
             alt="Modern Home"
-            className="w-full h-full object-cover scale-105"
+            className="w-full h-full object-cover scale-110 animate-slow-zoom"
           />
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-900/90 via-purple-800/85 to-indigo-900/90"></div>
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-purple-400/20 via-transparent to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-900/95 via-purple-800/90 to-indigo-900/95"></div>
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-purple-400/30 via-transparent to-transparent"></div>
+          
+          {/* Animated decorative elements */}
+          <div className="absolute top-20 left-10 w-72 h-72 bg-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-20 right-10 w-96 h-96 bg-indigo-500/20 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
         </div>
-        <div className="relative z-10 text-center text-white max-w-5xl px-4 fade-in">
-          <h1 className="text-6xl md:text-7xl font-bold mb-6 leading-tight">
-            Find Your Next <span className="text-purple-300">Dream</span> Home
+        
+        <div className="relative z-10 text-center text-white max-w-6xl px-4 py-20 fade-in">
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border border-white/20 mb-6 animate-in slide-in-from-top duration-700">
+            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+            <span className="text-sm font-medium">+{listings.length} propiedades disponibles</span>
+          </div>
+          
+          <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold mb-6 leading-tight animate-in slide-in-from-bottom duration-700">
+            Encuentra Tu <br />
+            <span className="bg-gradient-to-r from-purple-200 via-pink-200 to-purple-200 text-transparent bg-clip-text animate-gradient bg-300%">Hogar Perfecto</span>
           </h1>
-          <p className="text-xl md:text-2xl mb-10 text-purple-100 font-light">
-            Monthly rentals and sales. Connect directly — no fees, no middlemen.
+          
+          <p className="text-lg sm:text-xl md:text-2xl mb-12 text-purple-100 font-light max-w-3xl mx-auto leading-relaxed animate-in slide-in-from-bottom duration-700 delay-100">
+            Alquila o compra directamente con los dueños. 
+            <span className="block mt-2 text-white font-medium">Sin comisiones. Sin intermediarios. Sin estrés.</span>
           </p>
           
-          {/* Search Bar */}
-          <div className="bg-white/95 backdrop-blur-md rounded-2xl p-5 shadow-large max-w-4xl mx-auto border border-white/20 hover-lift">
-            <div className="flex flex-col md:flex-row gap-4">
-              <div className="flex-1">
+          {/* Search Bar - Enhanced */}
+          <div className="bg-white rounded-3xl p-3 sm:p-4 shadow-2xl max-w-5xl mx-auto border-4 border-purple-200/50 hover:border-purple-300/70 transition-all duration-300 animate-in slide-in-from-bottom duration-700 delay-200">
+            <div className="flex flex-col md:flex-row gap-3">
+              <div className="flex-1 relative">
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                 <Input
-                  placeholder="Search by city or property..."
+                  placeholder="Busca por ciudad o zona..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="h-14 text-base border-2 focus:border-primary"
+                  className="h-14 pl-12 text-base border-2 border-gray-200 focus:border-primary rounded-2xl bg-gray-50 font-medium"
                 />
               </div>
               <Select value={typeFilter} onValueChange={setTypeFilter}>
-                <SelectTrigger className="w-full md:w-48 h-14 border-2">
-                  <SelectValue placeholder="Type" />
+                <SelectTrigger className="w-full md:w-56 h-14 border-2 border-gray-200 rounded-2xl bg-gray-50 font-medium">
+                  <SelectValue placeholder="Tipo" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Types</SelectItem>
-                  <SelectItem value="rent">For Rent</SelectItem>
-                  <SelectItem value="sale">For Sale</SelectItem>
+                  <SelectItem value="all">Todos los tipos</SelectItem>
+                  <SelectItem value="rent">En Alquiler</SelectItem>
+                  <SelectItem value="sale">En Venta</SelectItem>
                 </SelectContent>
               </Select>
-              <Button variant="hero" className="h-14 px-10 text-base font-semibold shadow-medium hover:shadow-large">
+              <Button variant="hero" className="h-14 px-8 md:px-12 text-base font-bold shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 rounded-2xl">
                 <Search className="mr-2 h-5 w-5" />
-                Search
+                Buscar Ahora
               </Button>
             </div>
+          </div>
+          
+          {/* Quick Stats */}
+          <div className="flex flex-wrap justify-center gap-6 md:gap-12 mt-12 animate-in fade-in duration-1000 delay-300">
+            <div className="text-center">
+              <div className="text-3xl md:text-4xl font-bold mb-1">{listings.length}+</div>
+              <div className="text-sm md:text-base text-purple-200">Propiedades</div>
+            </div>
+            <div className="h-12 w-px bg-purple-300/30"></div>
+            <div className="text-center">
+              <div className="text-3xl md:text-4xl font-bold mb-1">500+</div>
+              <div className="text-sm md:text-base text-purple-200">Usuarios Activos</div>
+            </div>
+            <div className="h-12 w-px bg-purple-300/30"></div>
+            <div className="text-center">
+              <div className="text-3xl md:text-4xl font-bold mb-1">0%</div>
+              <div className="text-sm md:text-base text-purple-200">Comisiones</div>
+            </div>
+          </div>
+        </div>
+        
+        {/* Scroll indicator */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+          <div className="w-6 h-10 border-2 border-white/50 rounded-full flex items-start justify-center p-2">
+            <div className="w-1.5 h-3 bg-white rounded-full"></div>
           </div>
         </div>
       </section>
