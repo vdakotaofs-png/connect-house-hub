@@ -69,24 +69,24 @@ const ListingCard = ({ listing, isFavorite, userId }: ListingCardProps) => {
 
   return (
     <Link to={`/listing/${listing.slug}`}>
-      <Card className="overflow-hidden hover-lift cursor-pointer group border-2 hover:border-primary/20 transition-smooth fade-in">
-        <div className="relative h-64 overflow-hidden bg-gradient-to-br from-purple-50 to-white">
+      <Card className="overflow-hidden hover-lift cursor-pointer group border-2 border-gray-100 hover:border-primary/30 hover:shadow-2xl transition-all duration-300 fade-in">
+        <div className="relative h-72 overflow-hidden bg-gradient-to-br from-purple-50 to-white">
           <img
             src={mainPhoto}
             alt={listing.title}
-            className="w-full h-full object-cover group-hover:scale-110 transition-all duration-500"
+            className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700 ease-out"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-smooth"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
           <Button
             variant="ghost"
             size="icon"
-            className="absolute top-3 right-3 bg-white/95 hover:bg-white shadow-medium backdrop-blur-sm"
+            className="absolute top-4 right-4 bg-white hover:bg-white shadow-lg hover:shadow-xl transition-all duration-200 border-2 border-white"
             onClick={toggleFavorite}
           >
-            <Heart className={favorite ? "fill-red-500 text-red-500 scale-110" : "text-gray-600"} />
+            <Heart className={favorite ? "fill-red-500 text-red-500 scale-110" : "text-gray-700"} />
           </Button>
           <Badge
-            className="absolute top-3 left-3 bg-white/95 text-primary hover:bg-white shadow-medium backdrop-blur-sm font-semibold"
+            className="absolute top-4 left-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:from-purple-700 hover:to-indigo-700 shadow-lg font-bold px-4 py-1.5 text-sm"
           >
             {listing.type === "rent" ? "For Rent" : "For Sale"}
           </Badge>

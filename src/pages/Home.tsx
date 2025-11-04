@@ -4,7 +4,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import ListingCard from "@/components/ListingCard";
-import { Search } from "lucide-react";
+import Footer from "@/components/Footer";
+import { Search, Shield, Users, Home as HomeIcon, TrendingUp, Clock, MessageSquare } from "lucide-react";
 import heroImage from "@/assets/hero-home.jpg";
 
 interface HomeProps {
@@ -110,6 +111,86 @@ const Home = ({ user }: HomeProps) => {
         </div>
       </section>
 
+      {/* Stats Section */}
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div className="text-center fade-in">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 text-white mb-4 shadow-lg">
+                <HomeIcon className="h-8 w-8" />
+              </div>
+              <h3 className="text-4xl font-bold gradient-text mb-2">{listings.length}+</h3>
+              <p className="text-muted-foreground font-medium">Active Listings</p>
+            </div>
+            <div className="text-center fade-in" style={{animationDelay: '0.1s'}}>
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 text-white mb-4 shadow-lg">
+                <Users className="h-8 w-8" />
+              </div>
+              <h3 className="text-4xl font-bold gradient-text mb-2">500+</h3>
+              <p className="text-muted-foreground font-medium">Happy Users</p>
+            </div>
+            <div className="text-center fade-in" style={{animationDelay: '0.2s'}}>
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 text-white mb-4 shadow-lg">
+                <TrendingUp className="h-8 w-8" />
+              </div>
+              <h3 className="text-4xl font-bold gradient-text mb-2">98%</h3>
+              <p className="text-muted-foreground font-medium">Success Rate</p>
+            </div>
+            <div className="text-center fade-in" style={{animationDelay: '0.3s'}}>
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 text-white mb-4 shadow-lg">
+                <Clock className="h-8 w-8" />
+              </div>
+              <h3 className="text-4xl font-bold gradient-text mb-2">24/7</h3>
+              <p className="text-muted-foreground font-medium">Support</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-20 bg-gradient-to-b from-purple-50 to-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16 fade-in">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 gradient-text">Why Choose D House?</h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              We make finding your perfect home simple, direct, and hassle-free
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="bg-white p-8 rounded-2xl shadow-soft hover-lift border-2 border-transparent hover:border-primary/20 fade-in">
+              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center mb-6 shadow-medium">
+                <Shield className="h-7 w-7 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold mb-3 text-gray-900">No Middlemen</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Connect directly with property owners. No agents, no fees, no commissions. Just pure, direct communication.
+              </p>
+            </div>
+            
+            <div className="bg-white p-8 rounded-2xl shadow-soft hover-lift border-2 border-transparent hover:border-primary/20 fade-in" style={{animationDelay: '0.1s'}}>
+              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center mb-6 shadow-medium">
+                <MessageSquare className="h-7 w-7 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold mb-3 text-gray-900">Direct Messaging</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Chat with hosts instantly. Ask questions, schedule viewings, and negotiate terms directly.
+              </p>
+            </div>
+            
+            <div className="bg-white p-8 rounded-2xl shadow-soft hover-lift border-2 border-transparent hover:border-primary/20 fade-in" style={{animationDelay: '0.2s'}}>
+              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center mb-6 shadow-medium">
+                <TrendingUp className="h-7 w-7 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold mb-3 text-gray-900">Monthly Flexibility</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Perfect for digital nomads and flexible living. Find monthly rentals without long-term commitments.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Listings Grid */}
       <section className="container mx-auto px-4 py-16">
         <div className="mb-10 text-center">
@@ -144,6 +225,8 @@ const Home = ({ user }: HomeProps) => {
           </div>
         )}
       </section>
+
+      <Footer />
     </div>
   );
 };
