@@ -11,6 +11,7 @@ import Home from "@/pages/Home";
 import Auth from "@/pages/Auth";
 import Dashboard from "@/pages/Dashboard";
 import CreateListing from "@/pages/CreateListing";
+import EditListing from "@/pages/EditListing";
 import ListingDetail from "@/pages/ListingDetail";
 import Favorites from "@/pages/Favorites";
 import Messages from "@/pages/Messages";
@@ -64,6 +65,7 @@ const App = () => {
               <Route path="/auth" element={<Auth />} />
               <Route path="/dashboard" element={<Dashboard user={user} />} />
               <Route path="/create-listing" element={<CreateListing user={user} />} />
+              <Route path="/edit-listing/:id" element={<EditListing user={user} />} />
               <Route path="/listing/:slug" element={<ListingDetail user={user} />} />
               <Route path="/favorites" element={<Favorites user={user} />} />
               <Route path="/messages" element={<Messages user={user} />} />

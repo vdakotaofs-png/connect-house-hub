@@ -119,12 +119,12 @@ const CreateListing = ({ user }: CreateListingProps) => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="price_month">Monthly Price (USD) *</Label>
+                <Label htmlFor="price_month">Precio Mensual (RD$) *</Label>
                 <Input
                   id="price_month"
                   name="price_month"
                   type="number"
-                  placeholder="2000"
+                  placeholder="50000"
                   required
                 />
               </div>

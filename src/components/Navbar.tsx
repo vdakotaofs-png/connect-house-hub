@@ -23,11 +23,11 @@ const Navbar = ({ user }: NavbarProps) => {
   };
 
   return (
-    <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-xl border-b border-purple-100 shadow-medium">
-      <div className="container mx-auto px-6 py-3">
+    <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-xl border-b border-purple-100 shadow-lg">
+      <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           <Link to="/" className="transition-smooth hover:opacity-90 hover:scale-105">
-            <img src={logo} alt="D House" className="h-16 transition-all duration-300 drop-shadow-lg" />
+            <img src={logo} alt="D House" className="h-20 transition-all duration-300 drop-shadow-2xl" />
           </Link>
 
           <div className="flex items-center gap-3">

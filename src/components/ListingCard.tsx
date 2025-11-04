@@ -120,7 +120,7 @@ const ListingCard = ({ listing, isFavorite, userId }: ListingCardProps) => {
         </CardContent>
         <CardFooter className="p-5 pt-0 border-t mt-2">
           <p className="text-2xl font-bold gradient-text">
-            {listing.currency} {listing.price_month.toLocaleString()}<span className="text-base font-normal text-muted-foreground">/mo</span>
+            RD$ {listing.price_month.toLocaleString()}<span className="text-base font-normal text-muted-foreground">/mes</span>
           </p>
         </CardFooter>
       </Card>

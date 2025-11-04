@@ -194,7 +194,7 @@ const ListingDetail = ({ user }: ListingDetailProps) => {
                 <div className="flex justify-between items-start">
                   <div>
                     <CardTitle className="text-4xl md:text-5xl gradient-text mb-4">
-                      ${listing.price_month.toLocaleString()}<span className="text-2xl text-muted-foreground">/month</span>
+                      RD$ {listing.price_month.toLocaleString()}<span className="text-2xl text-muted-foreground">/mes</span>
                     </CardTitle>
                     <div className="flex flex-wrap gap-6 text-base text-muted-foreground">
                       {listing.bedrooms && (
