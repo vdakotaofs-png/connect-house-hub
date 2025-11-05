@@ -8,8 +8,10 @@ import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { MapPin, BedDouble, Bath, Maximize, Star, MessageCircle, Heart } from "lucide-react";
+import { MapPin, BedDouble, Bath, Maximize, Star, MessageCircle, Heart, X } from "lucide-react";
 import Map from "@/components/Map";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Slider } from "@/components/ui/slider";
 
 interface ListingDetailProps {
   user: any;
@@ -25,6 +27,11 @@ const ListingDetail = ({ user }: ListingDetailProps) => {
   const [message, setMessage] = useState("");
   const [isFavorite, setIsFavorite] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [selectedPhoto, setSelectedPhoto] = useState<number>(0);
+  const [showGallery, setShowGallery] = useState(false);
+  const [newRating, setNewRating] = useState(0);
+  const [newComment, setNewComment] = useState("");
+  const [submittingRating, setSubmittingRating] = useState(false);
 
   useEffect(() => {
     if (slug) {
@@ -151,6 +158,49 @@ const ListingDetail = ({ user }: ListingDetailProps) => {
     }
   };
 
+  const handleSubmitRating = async () => {
+    if (!user) {
+      navigate("/auth");
+      return;
+    }
+
+    if (newRating === 0) {
+      toast({
+        title: "Error",
+        description: "Please select a rating",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setSubmittingRating(true);
+
+    const { error } = await supabase.from("ratings").insert({
+      listing_id: listing.id,
+      user_id: user.id,
+      stars: newRating,
+      comment: newComment.trim() || null,
+    });
+
+    setSubmittingRating(false);
+
+    if (error) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Review submitted!",
+        description: "Thank you for your feedback.",
+      });
+      setNewRating(0);
+      setNewComment("");
+      fetchListing();
+    }
+  };
+
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-12 text-center">
@@ -165,13 +215,13 @@ const ListingDetail = ({ user }: ListingDetailProps) => {
     ? ratings.reduce((acc, r) => acc + r.stars, 0) / ratings.length
     : 0;
 
-  const mainPhoto = listing.photos?.[0] || "https://images.unsplash.com/photo-1564013799919-ab600027ffc6";
+  const photos = listing.photos || ["https://images.unsplash.com/photo-1564013799919-ab600027ffc6"];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-50/30 to-white">
       {/* Photo Gallery */}
-      <div className="relative h-[600px] overflow-hidden">
-        <img src={mainPhoto} alt={listing.title} className="w-full h-full object-cover scale-105" />
+      <div className="relative h-[600px] overflow-hidden cursor-pointer" onClick={() => setShowGallery(true)}>
+        <img src={photos[selectedPhoto]} alt={listing.title} className="w-full h-full object-cover scale-105" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
         <div className="absolute bottom-10 left-8 right-8 text-white fade-in">
           <Badge className="mb-6 bg-white/95 text-primary backdrop-blur-sm shadow-medium font-semibold text-base px-4 py-2">
@@ -183,7 +233,63 @@ const ListingDetail = ({ user }: ListingDetailProps) => {
             {listing.city}
           </p>
         </div>
+        {photos.length > 1 && (
+          <div className="absolute top-4 right-4 bg-black/50 text-white px-4 py-2 rounded-full backdrop-blur-sm">
+            {selectedPhoto + 1} / {photos.length}
+          </div>
+        )}
       </div>
+
+      {/* Photo Gallery Thumbnails */}
+      {photos.length > 1 && (
+        <div className="container mx-auto px-4 py-6">
+          <div className="flex gap-4 overflow-x-auto pb-2">
+            {photos.map((photo, index) => (
+              <button
+                key={index}
+                onClick={() => setSelectedPhoto(index)}
+                className={`flex-shrink-0 w-32 h-24 rounded-lg overflow-hidden border-2 transition-all ${
+                  index === selectedPhoto ? "border-primary scale-105 shadow-lg" : "border-gray-300 opacity-70 hover:opacity-100"
+                }`}
+              >
+                <img src={photo} alt={`${listing.title} ${index + 1}`} className="w-full h-full object-cover" />
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Full Gallery Modal */}
+      <Dialog open={showGallery} onOpenChange={setShowGallery}>
+        <DialogContent className="max-w-5xl h-[90vh] p-0">
+          <div className="relative h-full flex flex-col">
+            <button
+              onClick={() => setShowGallery(false)}
+              className="absolute top-4 right-4 z-10 bg-black/50 text-white p-2 rounded-full hover:bg-black/70"
+            >
+              <X className="h-6 w-6" />
+            </button>
+            <div className="flex-1 flex items-center justify-center bg-black">
+              <img src={photos[selectedPhoto]} alt={listing.title} className="max-w-full max-h-full object-contain" />
+            </div>
+            <div className="bg-background p-4 border-t">
+              <div className="flex gap-2 overflow-x-auto">
+                {photos.map((photo, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setSelectedPhoto(index)}
+                    className={`flex-shrink-0 w-20 h-16 rounded overflow-hidden border-2 ${
+                      index === selectedPhoto ? "border-primary" : "border-gray-300"
+                    }`}
+                  >
+                    <img src={photo} alt={`Thumbnail ${index + 1}`} className="w-full h-full object-cover" />
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
@@ -251,7 +357,57 @@ const ListingDetail = ({ user }: ListingDetailProps) => {
                   )}
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-8">
+                {/* Add Review Form */}
+                {user && user.id !== listing.owner_id && (
+                  <div className="border-2 border-purple-100 rounded-lg p-6 bg-gradient-to-br from-purple-50/30 to-white">
+                    <h4 className="font-bold text-lg mb-4">Write a Review</h4>
+                    <div className="space-y-4">
+                      <div>
+                        <Label className="mb-2 block">Your Rating *</Label>
+                        <div className="flex gap-2">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <button
+                              key={star}
+                              type="button"
+                              onClick={() => setNewRating(star)}
+                              className="transition-transform hover:scale-110"
+                            >
+                              <Star
+                                className={`h-8 w-8 cursor-pointer ${
+                                  star <= newRating
+                                    ? "fill-yellow-400 text-yellow-400"
+                                    : "text-gray-300"
+                                }`}
+                              />
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                      <div>
+                        <Label htmlFor="comment">Your Comment (optional)</Label>
+                        <Textarea
+                          id="comment"
+                          rows={3}
+                          placeholder="Share your experience with this property..."
+                          value={newComment}
+                          onChange={(e) => setNewComment(e.target.value)}
+                          className="mt-2"
+                        />
+                      </div>
+                      <Button
+                        onClick={handleSubmitRating}
+                        disabled={submittingRating || newRating === 0}
+                        variant="hero"
+                        className="w-full"
+                      >
+                        {submittingRating ? "Submitting..." : "Submit Review"}
+                      </Button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Reviews List */}
                 {ratings.length > 0 ? (
                   <div className="space-y-6">
                     {ratings.map((rating) => (

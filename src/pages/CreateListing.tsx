@@ -18,7 +18,14 @@ const CreateListing = ({ user }: CreateListingProps) => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
-  const [photos, setPhotos] = useState<File[]>([]);
+  const [photos, setPhotos] = useState<(File | null)[]>([null, null, null, null, null]);
+  const [photoLabels] = useState([
+    "Exterior/Facade",
+    "Living Room", 
+    "Kitchen",
+    "Bedroom",
+    "Bathroom"
+  ]);
 
   useEffect(() => {
     if (!user) {
@@ -26,37 +33,55 @@ const CreateListing = ({ user }: CreateListingProps) => {
     }
   }, [user, navigate]);
 
-  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
-    setPhotos([...photos, ...files].slice(0, 10)); // Max 10 photos
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+    if (!e.target.files || e.target.files.length === 0) return;
+    const file = e.target.files[0];
+    const newPhotos = [...photos];
+    newPhotos[index] = file;
+    setPhotos(newPhotos);
   };
 
   const removePhoto = (index: number) => {
-    setPhotos(photos.filter((_, i) => i !== index));
+    const newPhotos = [...photos];
+    newPhotos[index] = null;
+    setPhotos(newPhotos);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
+    
+    // Validate at least one photo
+    const validPhotos = photos.filter(p => p !== null);
+    if (validPhotos.length === 0) {
+      toast({
+        title: "Error",
+        description: "Por favor sube al menos una foto (Exterior/Facade es requerida)",
+        variant: "destructive",
+      });
+      return;
+    }
 
+    setLoading(true);
     const formData = new FormData(e.currentTarget);
 
     try {
       // Upload photos to storage
       const photoUrls: string[] = [];
-      for (const photo of photos) {
-        const fileName = `${user.id}/${Date.now()}-${photo.name}`;
-        const { error: uploadError } = await supabase.storage
-          .from('listings')
-          .upload(fileName, photo);
+      for (const photo of validPhotos) {
+        if (photo) {
+          const fileName = `${user.id}/${Date.now()}-${photo.name}`;
+          const { error: uploadError } = await supabase.storage
+            .from('listings')
+            .upload(fileName, photo);
 
-        if (uploadError) throw uploadError;
+          if (uploadError) throw uploadError;
 
-        const { data: { publicUrl } } = supabase.storage
-          .from('listings')
-          .getPublicUrl(fileName);
+          const { data: { publicUrl } } = supabase.storage
+            .from('listings')
+            .getPublicUrl(fileName);
 
-        photoUrls.push(publicUrl);
+          photoUrls.push(publicUrl);
+        }
       }
 
       const listingData = {
@@ -65,14 +90,14 @@ const CreateListing = ({ user }: CreateListingProps) => {
         description: formData.get("description") as string,
         type: formData.get("type") as string,
         price_month: parseFloat(formData.get("price_month") as string),
-        currency: "USD",
+        currency: "DOP",
         bedrooms: parseInt(formData.get("bedrooms") as string) || null,
         bathrooms: parseInt(formData.get("bathrooms") as string) || null,
         area_m2: parseFloat(formData.get("area_m2") as string) || null,
         address: formData.get("address") as string,
         city: formData.get("city") as string,
         status: formData.get("status") as string,
-        photos: photoUrls.length > 0 ? photoUrls : ["https://images.unsplash.com/photo-1564013799919-ab600027ffc6"],
+        photos: photoUrls,
       };
 
       const { error } = await supabase
@@ -225,46 +250,58 @@ const CreateListing = ({ user }: CreateListingProps) => {
               </Select>
             </div>
 
-            {/* Photo Upload */}
-            <div className="space-y-3">
-              <Label>Property Photos (Max 10)</Label>
-              <div className="border-2 border-dashed border-purple-200 rounded-lg p-8 text-center hover:border-purple-400 transition-colors">
-                <input
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  onChange={handlePhotoUpload}
-                  className="hidden"
-                  id="photo-upload"
-                />
-                <label htmlFor="photo-upload" className="cursor-pointer">
-                  <Upload className="h-12 w-12 text-purple-400 mx-auto mb-3" />
-                  <p className="text-sm text-muted-foreground">
-                    Click to upload property photos
-                  </p>
-                </label>
+            {/* Photo Upload - Structured */}
+            <div className="space-y-4">
+              <div>
+                <Label className="text-lg">Fotos de la Propiedad *</Label>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Sube fotos de diferentes áreas de la propiedad. La foto de Exterior/Facade es obligatoria.
+                </p>
               </div>
-              
-              {photos.length > 0 && (
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-                  {photos.map((photo, index) => (
-                    <div key={index} className="relative group">
-                      <img
-                        src={URL.createObjectURL(photo)}
-                        alt={`Upload ${index + 1}`}
-                        className="w-full h-32 object-cover rounded-lg"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => removePhoto(index)}
-                        className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                      >
-                        <X className="h-4 w-4" />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {photoLabels.map((label, index) => (
+                  <div key={index} className="space-y-2">
+                    <Label className="text-sm font-medium">
+                      {label} {index === 0 && <span className="text-red-500">*</span>}
+                    </Label>
+                    {photos[index] ? (
+                      <div className="relative group">
+                        <img 
+                          src={URL.createObjectURL(photos[index]!)} 
+                          alt={label} 
+                          className="w-full h-48 object-cover rounded-lg border-2 border-purple-200"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => removePhoto(index)}
+                          className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="border-2 border-dashed border-purple-200 rounded-lg p-6 text-center hover:border-purple-400 transition-colors">
+                        <input
+                          type="file"
+                          id={`photo-${index}`}
+                          accept="image/*"
+                          onChange={(e) => handlePhotoUpload(e, index)}
+                          className="hidden"
+                        />
+                        <label htmlFor={`photo-${index}`} className="cursor-pointer block">
+                          <Upload className="h-8 w-8 mx-auto mb-2 text-purple-400" />
+                          <p className="text-xs font-medium mb-1">
+                            Click to upload
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            PNG, JPG up to 10MB
+                          </p>
+                        </label>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
 
             <div className="flex gap-4 pt-4">

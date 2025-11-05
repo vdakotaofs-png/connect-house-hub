@@ -20,8 +20,14 @@ const EditListing = ({ user }: EditListingProps) => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [listing, setListing] = useState<any>(null);
-  const [photoUrls, setPhotoUrls] = useState<string[]>([]);
-  const [newPhotoUrl, setNewPhotoUrl] = useState("");
+  const [photos, setPhotos] = useState<(string | null)[]>([null, null, null, null, null]);
+  const [photoLabels] = useState([
+    "Exterior/Facade",
+    "Living Room", 
+    "Kitchen",
+    "Bedroom",
+    "Bathroom"
+  ]);
 
   useEffect(() => {
     if (!user) {
@@ -61,22 +67,69 @@ const EditListing = ({ user }: EditListingProps) => {
     }
 
     setListing(data);
-    setPhotoUrls(data.photos || []);
+    // Fill photos array with existing photos
+    const existingPhotos = data.photos || [];
+    const filledPhotos = [...existingPhotos];
+    while (filledPhotos.length < 5) {
+      filledPhotos.push(null);
+    }
+    setPhotos(filledPhotos.slice(0, 5));
   };
 
-  const handleAddPhotoUrl = () => {
-    if (newPhotoUrl.trim()) {
-      setPhotoUrls([...photoUrls, newPhotoUrl.trim()]);
-      setNewPhotoUrl("");
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+    if (!e.target.files || e.target.files.length === 0) return;
+
+    const file = e.target.files[0];
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${user.id}/${Date.now()}.${fileExt}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from('listings')
+      .upload(fileName, file);
+
+    if (uploadError) {
+      toast({
+        title: "Upload Error",
+        description: uploadError.message,
+        variant: "destructive",
+      });
+      return;
     }
+
+    const { data: { publicUrl } } = supabase.storage
+      .from('listings')
+      .getPublicUrl(fileName);
+
+    const newPhotos = [...photos];
+    newPhotos[index] = publicUrl;
+    setPhotos(newPhotos);
+
+    toast({
+      title: "Success!",
+      description: "Photo uploaded successfully.",
+    });
   };
 
   const handleRemovePhoto = (index: number) => {
-    setPhotoUrls(photoUrls.filter((_, i) => i !== index));
+    const newPhotos = [...photos];
+    newPhotos[index] = null;
+    setPhotos(newPhotos);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // Validate at least one photo
+    const validPhotos = photos.filter(p => p !== null);
+    if (validPhotos.length === 0) {
+      toast({
+        title: "Error",
+        description: "Por favor sube al menos una foto (Exterior/Facade es requerida)",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
 
     const formData = new FormData(e.currentTarget);
@@ -93,7 +146,7 @@ const EditListing = ({ user }: EditListingProps) => {
       address: formData.get("address") as string,
       city: formData.get("city") as string,
       status: formData.get("status") as string,
-      photos: photoUrls.length > 0 ? photoUrls : ["https://images.unsplash.com/photo-1564013799919-ab600027ffc6"],
+      photos: validPhotos,
     };
 
     const { error } = await supabase
@@ -160,45 +213,61 @@ const EditListing = ({ user }: EditListingProps) => {
               />
             </div>
 
-            {/* Photo Management */}
+            {/* Photo Upload - Structured */}
             <div className="space-y-4">
-              <Label>Fotos de la Propiedad</Label>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {photoUrls.map((url, index) => (
-                  <div key={index} className="relative group">
-                    <img 
-                      src={url} 
-                      alt={`Property ${index + 1}`} 
-                      className="w-full h-32 object-cover rounded-lg border-2 border-gray-200"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1564013799919-ab600027ffc6";
-                      }}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => handleRemovePhoto(index)}
-                      className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                    >
-                      <X className="h-4 w-4" />
-                    </button>
+              <div>
+                <Label className="text-lg">Fotos de la Propiedad *</Label>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Actualiza las fotos de diferentes áreas de la propiedad. La foto de Exterior/Facade es obligatoria.
+                </p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {photoLabels.map((label, index) => (
+                  <div key={index} className="space-y-2">
+                    <Label className="text-sm font-medium">
+                      {label} {index === 0 && <span className="text-red-500">*</span>}
+                    </Label>
+                    {photos[index] ? (
+                      <div className="relative group">
+                        <img 
+                          src={photos[index]!} 
+                          alt={label} 
+                          className="w-full h-48 object-cover rounded-lg border-2 border-purple-200"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1564013799919-ab600027ffc6";
+                          }}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleRemovePhoto(index)}
+                          className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="border-2 border-dashed border-purple-200 rounded-lg p-6 text-center hover:border-purple-400 transition-colors">
+                        <input
+                          type="file"
+                          id={`photo-${index}`}
+                          accept="image/*"
+                          onChange={(e) => handlePhotoUpload(e, index)}
+                          className="hidden"
+                        />
+                        <label htmlFor={`photo-${index}`} className="cursor-pointer block">
+                          <Upload className="h-8 w-8 mx-auto mb-2 text-purple-400" />
+                          <p className="text-xs font-medium mb-1">
+                            Click to upload
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            PNG, JPG up to 10MB
+                          </p>
+                        </label>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
-              <div className="flex gap-2">
-                <Input
-                  value={newPhotoUrl}
-                  onChange={(e) => setNewPhotoUrl(e.target.value)}
-                  placeholder="URL de la foto (https://...)"
-                  className="flex-1"
-                />
-                <Button type="button" onClick={handleAddPhotoUrl} variant="outline">
-                  <Upload className="h-4 w-4 mr-2" />
-                  Agregar
-                </Button>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                Agrega URLs de fotos de tu propiedad. Puedes usar servicios como Imgur, Cloudinary, o cualquier URL de imagen pública.
-              </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
