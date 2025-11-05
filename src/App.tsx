@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import type { User, Session } from "@supabase/supabase-js";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import Home from "@/pages/Home";
 import Auth from "@/pages/Auth";
 import Dashboard from "@/pages/Dashboard";
@@ -15,6 +16,7 @@ import EditListing from "@/pages/EditListing";
 import ListingDetail from "@/pages/ListingDetail";
 import Favorites from "@/pages/Favorites";
 import Messages from "@/pages/Messages";
+import Profile from "@/pages/Profile";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -69,9 +71,11 @@ const App = () => {
               <Route path="/listing/:slug" element={<ListingDetail user={user} />} />
               <Route path="/favorites" element={<Favorites user={user} />} />
               <Route path="/messages" element={<Messages user={user} />} />
+              <Route path="/profile/:id" element={<Profile />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
+            <Footer />
           </div>
         </BrowserRouter>
       </TooltipProvider>

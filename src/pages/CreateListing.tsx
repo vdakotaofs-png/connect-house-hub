@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { useEffect } from "react";
+import { Upload, X } from "lucide-react";
 
 interface CreateListingProps {
   user: any;
@@ -18,6 +18,7 @@ const CreateListing = ({ user }: CreateListingProps) => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [photos, setPhotos] = useState<File[]>([]);
 
   useEffect(() => {
     if (!user) {
@@ -25,48 +26,76 @@ const CreateListing = ({ user }: CreateListingProps) => {
     }
   }, [user, navigate]);
 
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    setPhotos([...photos, ...files].slice(0, 10)); // Max 10 photos
+  };
+
+  const removePhoto = (index: number) => {
+    setPhotos(photos.filter((_, i) => i !== index));
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
 
     const formData = new FormData(e.currentTarget);
-    
-    const listingData = {
-      owner_id: user.id,
-      title: formData.get("title") as string,
-      description: formData.get("description") as string,
-      type: formData.get("type") as string,
-      price_month: parseFloat(formData.get("price_month") as string),
-      currency: "USD",
-      bedrooms: parseInt(formData.get("bedrooms") as string) || null,
-      bathrooms: parseInt(formData.get("bathrooms") as string) || null,
-      area_m2: parseFloat(formData.get("area_m2") as string) || null,
-      address: formData.get("address") as string,
-      city: formData.get("city") as string,
-      status: formData.get("status") as string,
-      photos: ["https://images.unsplash.com/photo-1564013799919-ab600027ffc6"], // Placeholder
-    };
 
-    const { data, error } = await supabase
-      .from("listings")
-      .insert(listingData)
-      .select()
-      .single();
+    try {
+      // Upload photos to storage
+      const photoUrls: string[] = [];
+      for (const photo of photos) {
+        const fileName = `${user.id}/${Date.now()}-${photo.name}`;
+        const { error: uploadError } = await supabase.storage
+          .from('listings')
+          .upload(fileName, photo);
 
-    setLoading(false);
+        if (uploadError) throw uploadError;
 
-    if (error) {
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
-      });
-    } else {
+        const { data: { publicUrl } } = supabase.storage
+          .from('listings')
+          .getPublicUrl(fileName);
+
+        photoUrls.push(publicUrl);
+      }
+
+      const listingData = {
+        owner_id: user.id,
+        title: formData.get("title") as string,
+        description: formData.get("description") as string,
+        type: formData.get("type") as string,
+        price_month: parseFloat(formData.get("price_month") as string),
+        currency: "USD",
+        bedrooms: parseInt(formData.get("bedrooms") as string) || null,
+        bathrooms: parseInt(formData.get("bathrooms") as string) || null,
+        area_m2: parseFloat(formData.get("area_m2") as string) || null,
+        address: formData.get("address") as string,
+        city: formData.get("city") as string,
+        status: formData.get("status") as string,
+        photos: photoUrls.length > 0 ? photoUrls : ["https://images.unsplash.com/photo-1564013799919-ab600027ffc6"],
+      };
+
+      const { error } = await supabase
+        .from("listings")
+        .insert(listingData)
+        .select()
+        .single();
+
+      if (error) throw error;
+
       toast({
         title: "Success!",
         description: "Your listing has been created.",
       });
       navigate("/dashboard");
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -194,6 +223,48 @@ const CreateListing = ({ user }: CreateListingProps) => {
                   <SelectItem value="published">Publicar Ahora</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+
+            {/* Photo Upload */}
+            <div className="space-y-3">
+              <Label>Property Photos (Max 10)</Label>
+              <div className="border-2 border-dashed border-purple-200 rounded-lg p-8 text-center hover:border-purple-400 transition-colors">
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handlePhotoUpload}
+                  className="hidden"
+                  id="photo-upload"
+                />
+                <label htmlFor="photo-upload" className="cursor-pointer">
+                  <Upload className="h-12 w-12 text-purple-400 mx-auto mb-3" />
+                  <p className="text-sm text-muted-foreground">
+                    Click to upload property photos
+                  </p>
+                </label>
+              </div>
+              
+              {photos.length > 0 && (
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                  {photos.map((photo, index) => (
+                    <div key={index} className="relative group">
+                      <img
+                        src={URL.createObjectURL(photo)}
+                        alt={`Upload ${index + 1}`}
+                        className="w-full h-32 object-cover rounded-lg"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removePhoto(index)}
+                        className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className="flex gap-4 pt-4">

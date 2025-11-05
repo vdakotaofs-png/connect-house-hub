@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { MapPin, BedDouble, Bath, Maximize, Star, MessageCircle, Heart } from "lucide-react";
+import Map from "@/components/Map";
 
 interface ListingDetailProps {
   user: any;
@@ -288,6 +289,18 @@ const ListingDetail = ({ user }: ListingDetailProps) => {
                 )}
               </CardContent>
             </Card>
+
+            {/* Map */}
+            {listing.lat && listing.lng && (
+              <Card className="border-2 hover-lift">
+                <CardHeader>
+                  <CardTitle className="text-2xl">Location</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <Map latitude={Number(listing.lat)} longitude={Number(listing.lng)} />
+                </CardContent>
+              </Card>
+            )}
           </div>
 
           {/* Sidebar */}
