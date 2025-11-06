@@ -59,7 +59,7 @@ const Dashboard = ({ user }: DashboardProps) => {
     const formData = new FormData(e.currentTarget);
     const updates = {
       full_name: formData.get("full_name") as string,
-      role: formData.get("role") as string,
+      role: profile.role, // Use state value since Select doesn't work with FormData
       bio: formData.get("bio") as string,
       phone: formData.get("phone") as string,
     };
@@ -199,7 +199,10 @@ const Dashboard = ({ user }: DashboardProps) => {
 
                   <div className="space-y-2">
                     <Label htmlFor="role">Soy un...</Label>
-                    <Select name="role" defaultValue={profile.role}>
+                    <Select 
+                      value={profile.role} 
+                      onValueChange={(value) => setProfile({...profile, role: value})}
+                    >
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
